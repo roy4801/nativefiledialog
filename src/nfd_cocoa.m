@@ -15,7 +15,7 @@ static NSArray *BuildAllowedFileTypes( const char *filterList )
     NSMutableArray *buildFilterList = [[NSMutableArray alloc] init];
 
     char typebuf[NFD_MAX_STRLEN] = {0};
-    
+
     size_t filterListLen = strlen(filterList);
     char *p_typebuf = typebuf;
     for ( size_t i = 0; i < filterListLen+1; ++i )
@@ -64,7 +64,7 @@ static void SetDefaultPath( NSSavePanel *dialog, const nfdchar_t *defaultPath )
 
     NSString *defaultPathString = [NSString stringWithUTF8String: defaultPath];
     NSURL *url = [NSURL fileURLWithPath:defaultPathString isDirectory:YES];
-    [dialog setDirectoryURL:url];    
+    [dialog setDirectoryURL:url];
 }
 
 
@@ -76,7 +76,7 @@ static nfdresult_t AllocPathSet( NSArray *urls, nfdpathset_t *pathset )
 
     pathset->count = (size_t)[urls count];
     pathset->indices = NFDi_Malloc( sizeof(size_t)*pathset->count );
-    if ( !pathset->indices ) 
+    if ( !pathset->indices )
     {
         return NFD_ERROR;
     }
@@ -125,7 +125,7 @@ nfdresult_t NFD_OpenDialog( const nfdchar_t *filterList,
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    NSWindow *keyWindow = [[NSApplication sharedApplication] keyWindow];    
+    NSWindow *keyWindow = [[NSApplication sharedApplication] keyWindow];
     NSOpenPanel *dialog = [NSOpenPanel openPanel];
     [dialog setAllowsMultipleSelection:NO];
 
@@ -148,7 +148,7 @@ nfdresult_t NFD_OpenDialog( const nfdchar_t *filterList,
         if ( !*outPath )
         {
             [pool release];
-            [keyWindow makeKeyAndOrderFront:nil];            
+            [keyWindow makeKeyAndOrderFront:nil];
             return NFD_ERROR;
         }
         memcpy( *outPath, utf8Path, len+1 ); /* copy null term */
@@ -167,7 +167,7 @@ nfdresult_t NFD_OpenDialogMultiple( const nfdchar_t *filterList,
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSWindow *keyWindow = [[NSApplication sharedApplication] keyWindow];
-    
+
     NSOpenPanel *dialog = [NSOpenPanel openPanel];
     [dialog setAllowsMultipleSelection:YES];
 
@@ -176,7 +176,7 @@ nfdresult_t NFD_OpenDialogMultiple( const nfdchar_t *filterList,
 
     // Set the starting directory
     SetDefaultPath(dialog, defaultPath);
-    
+
     nfdresult_t nfdResult = NFD_CANCEL;
     if ( [dialog runModal] == NSModalResponseOK )
     {
@@ -185,14 +185,14 @@ nfdresult_t NFD_OpenDialogMultiple( const nfdchar_t *filterList,
         if ( [urls count] == 0 )
         {
             [pool release];
-            [keyWindow makeKeyAndOrderFront:nil];            
+            [keyWindow makeKeyAndOrderFront:nil];
             return NFD_CANCEL;
         }
 
         if ( AllocPathSet( urls, outPaths ) == NFD_ERROR )
         {
             [pool release];
-            [keyWindow makeKeyAndOrderFront:nil];            
+            [keyWindow makeKeyAndOrderFront:nil];
             return NFD_ERROR;
         }
 
@@ -200,7 +200,7 @@ nfdresult_t NFD_OpenDialogMultiple( const nfdchar_t *filterList,
     }
     [pool release];
 
-    [keyWindow makeKeyAndOrderFront:nil];    
+    [keyWindow makeKeyAndOrderFront:nil];
     return nfdResult;
 }
 
@@ -211,10 +211,10 @@ nfdresult_t NFD_SaveDialog( const nfdchar_t *filterList,
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSWindow *keyWindow = [[NSApplication sharedApplication] keyWindow];
-    
+
     NSSavePanel *dialog = [NSSavePanel savePanel];
     [dialog setExtensionHidden:NO];
-    
+
     // Build the filter list.
     AddFilterListToDialog(dialog, filterList);
 
@@ -228,12 +228,12 @@ nfdresult_t NFD_SaveDialog( const nfdchar_t *filterList,
         const char *utf8Path = [[url path] UTF8String];
 
         size_t byteLen = [url.path lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
-        
+
         *outPath = NFDi_Malloc( byteLen );
         if ( !*outPath )
         {
             [pool release];
-            [keyWindow makeKeyAndOrderFront:nil];            
+            [keyWindow makeKeyAndOrderFront:nil];
             return NFD_ERROR;
         }
         memcpy( *outPath, utf8Path, byteLen );
@@ -273,7 +273,7 @@ nfdresult_t NFD_PickFolder(const nfdchar_t *defaultPath,
         if ( !*outPath )
         {
             [pool release];
-            [keyWindow makeKeyAndOrderFront:nil];            
+            [keyWindow makeKeyAndOrderFront:nil];
             return NFD_ERROR;
         }
         memcpy( *outPath, utf8Path, len+1 ); /* copy null term */

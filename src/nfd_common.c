@@ -28,7 +28,7 @@ nfdchar_t *NFD_PathSet_GetPath( const nfdpathset_t *pathset, size_t num )
 {
     assert(pathset);
     assert(num < pathset->count);
-    
+
     return pathset->buf + pathset->indices[num];
 }
 
@@ -70,8 +70,8 @@ int NFDi_SafeStrncpy( char *dst, const char *src, size_t maxCopy )
 
     assert( src );
     assert( dst );
-    
-    while ( n > 0 && *src != '\0' )    
+
+    while ( n > 0 && *src != '\0' )
     {
         *d++ = *src++;
         --n;
@@ -94,13 +94,13 @@ int NFDi_SafeStrncpy( char *dst, const char *src, size_t maxCopy )
 /* adapted from microutf8 */
 int32_t NFDi_UTF8_Strlen( const nfdchar_t *str )
 {
-	/* This function doesn't properly check validity of UTF-8 character 
+	/* This function doesn't properly check validity of UTF-8 character
 	sequence, it is supposed to use only with valid UTF-8 strings. */
-    
+
 	int32_t character_count = 0;
 	int32_t i = 0; /* Counter used to iterate over string. */
 	nfdchar_t maybe_bom[4];
-	
+
 	/* If there is UTF-8 BOM ignore it. */
 	if (strlen(str) > 2)
 	{
@@ -109,12 +109,12 @@ int32_t NFDi_UTF8_Strlen( const nfdchar_t *str )
 		if (strcmp(maybe_bom, (nfdchar_t*)NFD_UTF8_BOM) == 0)
 			i += 3;
 	}
-	
+
 	while(str[i])
 	{
 		if (str[i] >> 7 == 0)
         {
-            /* If bit pattern begins with 0 we have ascii character. */ 
+            /* If bit pattern begins with 0 we have ascii character. */
 			++character_count;
         }
 		else if (str[i] >> 6 == 3)
@@ -132,7 +132,7 @@ int32_t NFDi_UTF8_Strlen( const nfdchar_t *str )
 		++i;
 	}
 
-	return character_count;	
+	return character_count;
 }
 
 int NFDi_IsFilterSegmentChar( char ch )

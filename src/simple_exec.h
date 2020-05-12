@@ -77,7 +77,7 @@ int runCommandArray(char** stdOut, int* stdOutByteCount, int* returnCode, int in
         {
             release_assert(dup2(parentToChild[READ_FD ], STDIN_FILENO ) != -1);
             release_assert(dup2(childToParent[WRITE_FD], STDOUT_FILENO) != -1);
-            
+
             if(includeStdErr)
             {
                 release_assert(dup2(childToParent[WRITE_FD], STDERR_FILENO) != -1);
@@ -92,14 +92,14 @@ int runCommandArray(char** stdOut, int* stdOutByteCount, int* returnCode, int in
             release_assert(close(parentToChild[WRITE_FD]) == 0);
             release_assert(close(childToParent[READ_FD ]) == 0);
             release_assert(close(errPipe[READ_FD]) == 0);
-            
+
             const char* command = allArgs[0];
             execvp(command, allArgs);
 
             char err = 1;
             ssize_t result = write(errPipe[WRITE_FD], &err, 1);
             release_assert(result != -1);
-            
+
             close(errPipe[WRITE_FD]);
             close(parentToChild[READ_FD]);
             close(childToParent[WRITE_FD]);
@@ -136,14 +136,14 @@ int runCommandArray(char** stdOut, int* stdOutByteCount, int* returnCode, int in
 
                         if(errChar)
                         {
-                            free(dataReadFromChild); 
+                            free(dataReadFromChild);
                             return COMMAND_NOT_FOUND;
                         }
-                        
+
                         // free any un-needed memory with realloc + add a null terminator for convenience
                         dataReadFromChild = (char*)realloc(dataReadFromChild, dataReadFromChildUsed + 1);
                         dataReadFromChild[dataReadFromChildUsed] = '\0';
-                        
+
                         if(stdOut != NULL)
                             *stdOut = dataReadFromChild;
                         else
@@ -184,14 +184,14 @@ int runCommand(char** stdOut, int* stdOutByteCount, int* returnCode, int include
 {
     va_list vl;
     va_start(vl, command);
-      
+
     char* currArg = NULL;
-      
+
     int allArgsInitialSize = 16;
     int allArgsSize = allArgsInitialSize;
     char** allArgs = (char**)malloc(sizeof(char*) * allArgsSize);
     allArgs[0] = command;
-        
+
     int i = 1;
     do
     {

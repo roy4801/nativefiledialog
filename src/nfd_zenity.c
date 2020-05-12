@@ -24,7 +24,7 @@ static void AddTypeToFilterName( const char *typebuf, char *filterName, size_t b
         strncat( filterName, " *.", bufsize - len - 1 );
     else
         strncat( filterName, "--file-filter=*.", bufsize - len - 1 );
-    
+
     len = strlen(filterName);
     strncat( filterName, typebuf, bufsize - len - 1 );
 }
@@ -36,28 +36,28 @@ static void AddFiltersToCommandArgs(char** commandArgs, int commandArgsLen, cons
     char *p_typebuf = typebuf;
     char filterName[NFD_MAX_STRLEN] = {0};
     int i;
-    
+
     if ( !filterList || strlen(filterList) == 0 )
         return;
 
     while ( 1 )
     {
-        
+
         if ( NFDi_IsFilterSegmentChar(*p_filterList) )
         {
             char typebufWildcard[NFD_MAX_STRLEN];
             /* add another type to the filter */
             assert( strlen(typebuf) > 0 );
             assert( strlen(typebuf) < NFD_MAX_STRLEN-1 );
-            
+
             snprintf( typebufWildcard, NFD_MAX_STRLEN, "*.%s", typebuf );
 
             AddTypeToFilterName( typebuf, filterName, NFD_MAX_STRLEN );
-            
+
             p_typebuf = typebuf;
             memset( typebuf, 0, sizeof(char) * NFD_MAX_STRLEN );
         }
-        
+
         if ( *p_filterList == ';' || *p_filterList == '\0' )
         {
             /* end of filter -- add it to the dialog */
@@ -65,7 +65,7 @@ static void AddFiltersToCommandArgs(char** commandArgs, int commandArgsLen, cons
             for(i = 0; commandArgs[i] != NULL && i < commandArgsLen; i++);
 
             commandArgs[i] = strdup(filterName);
-            
+
             filterName[0] = '\0';
 
             if ( *p_filterList == '\0' )
@@ -80,9 +80,9 @@ static void AddFiltersToCommandArgs(char** commandArgs, int commandArgsLen, cons
 
         p_filterList++;
     }
-    
+
     /* always append a wildcard option to the end*/
-    
+
     for(i = 0; commandArgs[i] != NULL && i < commandArgsLen; i++);
 
     commandArgs[i] = strdup("--file-filter=*.*");
@@ -129,13 +129,13 @@ static nfdresult_t ZenityCommon(char** command, int commandLen, const char* defa
 
     return result;
 }
- 
+
 
 static nfdresult_t AllocPathSet(char* zenityList, nfdpathset_t *pathSet )
 {
     assert(zenityList);
     assert(pathSet);
-    
+
     size_t len = strlen(zenityList) + 1;
     pathSet->buf = NFDi_Malloc(len);
 
@@ -171,16 +171,16 @@ static nfdresult_t AllocPathSet(char* zenityList, nfdpathset_t *pathSet )
             pathSet->indices[entry] = i + 1;
         }
     }
-    
+
     return NFD_OKAY;
 }
-                                 
+
 /* public */
 
 nfdresult_t NFD_OpenDialog( const char *filterList,
                             const nfdchar_t *defaultPath,
                             nfdchar_t **outPath )
-{    
+{
     int commandLen = 100;
     char* command[commandLen];
     memset(command, 0, commandLen * sizeof(char*));
@@ -191,7 +191,7 @@ nfdresult_t NFD_OpenDialog( const char *filterList,
 
     char* stdOut = NULL;
     nfdresult_t result = ZenityCommon(command, commandLen, defaultPath, filterList, &stdOut);
-            
+
     if(stdOut != NULL)
     {
         size_t len = strlen(stdOut);
@@ -224,7 +224,7 @@ nfdresult_t NFD_OpenDialogMultiple( const nfdchar_t *filterList,
 
     char* stdOut = NULL;
     nfdresult_t result = ZenityCommon(command, commandLen, defaultPath, filterList, &stdOut);
-            
+
     if(stdOut != NULL)
     {
         size_t len = strlen(stdOut);
@@ -258,7 +258,7 @@ nfdresult_t NFD_SaveDialog( const nfdchar_t *filterList,
 
     char* stdOut = NULL;
     nfdresult_t result = ZenityCommon(command, commandLen, defaultPath, filterList, &stdOut);
-            
+
     if(stdOut != NULL)
     {
         size_t len = strlen(stdOut);
@@ -289,7 +289,7 @@ nfdresult_t NFD_PickFolder(const nfdchar_t *defaultPath,
 
     char* stdOut = NULL;
     nfdresult_t result = ZenityCommon(command, commandLen, defaultPath, "", &stdOut);
-            
+
     if(stdOut != NULL)
     {
         size_t len = strlen(stdOut);
